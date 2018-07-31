@@ -11,6 +11,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,8 +55,24 @@ public abstract class RSACoder {
         return keyMap;
     }
     /**
+     * 公钥加密
+     * @param  data 待加密数据
+     * @param  key 公钥
+     * @return byte[] 加密数据
+     */
+    public static byte[] encryptByPublicKey(byte[] data,byte[] key) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+        //获取公钥
+        X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(key);
+        KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
+        PublicKey publicKey = keyFactory.generatePublic(x509EncodedKeySpec);
+        //数据加密
+        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
+        cipher.init(Cipher.ENCRYPT_MODE,publicKey);
+        return cipher.doFinal(data);
+    }
+    /**
      * 私钥解密
-     * @param  data 带解密数据
+     * @param  data 待解密数据
      * @param  key 私钥
      * @return byte[] 解密数据
      */

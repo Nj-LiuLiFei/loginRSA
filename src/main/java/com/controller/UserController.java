@@ -28,6 +28,7 @@ public class UserController {
     public String login(@RequestParam("password") String password, Model model, HttpServletRequest httpServletRequest){
 
         try {
+
             byte[] encryptPassword  = RSACoder.decryptByPrivateKey(Base64Utils.decodeFromString(password),Base64Utils.decodeFromString((String) httpServletRequest.getServletContext().getAttribute("priKey")));
             model.addAttribute("encryptPassword",password);
             model.addAttribute("password", new String(encryptPassword,"UTF-8"));
